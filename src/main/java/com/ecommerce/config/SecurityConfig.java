@@ -2,35 +2,88 @@ package com.ecommerce.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.ecommerce.security.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	 private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+	    public SecurityConfig(
+	            JwtAuthenticationFilter jwtAuthenticationFilter
+	    ) {
+	        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+	    }
+	    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
 
         http
+
+                // REST API + JWT, so disable CSRF for now
                 .csrf(csrf -> csrf.disable())
 
+                // Do not create HTTP session
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
+                )
+
+                // Authorization rules
                 .authorizeHttpRequests(auth -> auth
 
+                        // Public authentication APIs
                         .requestMatchers(
-                                "/api/auth/**"
-                        ).permitAll()
+                                "/api/auth/register",
+                                "/api/auth/login"
+                        )
+                        .permitAll()
 
-                        .anyRequest().authenticated()
+                        // Every other API requires authentication
+                        .anyRequest()
+                        .authenticated()
+                        
+                		  )
+
+
+                // Run JWT filter before Spring's
+                // UsernamePasswordAuthenticationFilter
+                .addFilterBefore(
+                        jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class
                 );
 
         return http.build();
+    }
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration
+    ) throws Exception {
+
+        return configuration.getAuthenticationManager();
     }
 }

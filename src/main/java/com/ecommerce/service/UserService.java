@@ -5,6 +5,6 @@ import com.ecommerce.dto.response.UserResponse;
 
 public interface UserService {
 
-    UserResponse registerCustomer(RegisterRequest request);
+	UserResponse getUserById(Long id);
 
 }
