@@ -15,18 +15,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.ecommerce.security.CustomAuthenticationEntryPoint;
 import com.ecommerce.security.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
-	 private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
-	    public SecurityConfig(
-	            JwtAuthenticationFilter jwtAuthenticationFilter
-	    ) {
-	        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-	    }
+	public SecurityConfig(
+	        JwtAuthenticationFilter jwtAuthenticationFilter,
+	        CustomAuthenticationEntryPoint authenticationEntryPoint
+	) {
+	    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+	    this.authenticationEntryPoint = authenticationEntryPoint;
+	}
 	    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
@@ -43,6 +47,12 @@ public class SecurityConfig {
                                 SessionCreationPolicy.STATELESS
                         )
                 )
+                
+                .exceptionHandling(exception ->
+                exception.authenticationEntryPoint(
+                        authenticationEntryPoint
+                )
+        )
 
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth

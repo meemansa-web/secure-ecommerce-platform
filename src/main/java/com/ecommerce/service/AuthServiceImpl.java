@@ -6,6 +6,8 @@ import com.ecommerce.dto.response.AuthResponse;
 import com.ecommerce.dto.response.RegisterResponse;
 import com.ecommerce.entity.User;
 import com.ecommerce.enums.Role;
+import com.ecommerce.exception.ResourceAlreadyExistsException;
+import com.ecommerce.exception.UserNotFoundException;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.security.CustomerUserDetailService;
 import com.ecommerce.security.JwtService;
@@ -63,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
          */
         if (userRepository.existsByEmail(email)) {
 
-            throw new RuntimeException(
+            throw new ResourceAlreadyExistsException(
                     "Email is already registered"
             );
         }
@@ -74,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
          */
         if (userRepository.existsByUsername(username)) {
 
-            throw new RuntimeException(
+            throw new ResourceAlreadyExistsException(
                     "Username is already taken"
             );
         }
@@ -170,7 +172,7 @@ public class AuthServiceImpl implements AuthService {
                 userRepository
                         .findByEmail(email)
                         .orElseThrow(
-                                () -> new RuntimeException(
+                                () -> new UserNotFoundException(
                                         "User not found"
                                 )
                         );
