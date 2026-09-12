@@ -63,7 +63,10 @@ public class SecurityConfig {
                                 "/api/auth/login"
                         )
                         .permitAll()
-
+                         
+                        .requestMatchers("/api/customer/**")
+                        .hasRole("CUSTOMER")
+                        
                         // Every other API requires authentication
                         .anyRequest()
                         .authenticated()

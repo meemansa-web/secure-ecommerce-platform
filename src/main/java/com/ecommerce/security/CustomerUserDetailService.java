@@ -13,21 +13,18 @@ public class CustomerUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public CustomerUserDetailService(
-            UserRepository userRepository
-    ) {
+    public CustomerUserDetailService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(
-            String email
-    ) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
 
         User user = userRepository
                 .findByEmail(email.toLowerCase())
-                .orElseThrow(
-                        () -> new UsernameNotFoundException(
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(
                                 "User not found with email: " + email
                         )
                 );
