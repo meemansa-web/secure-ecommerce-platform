@@ -45,4 +45,20 @@ public class AdminVendorController {
                 vendorService.rejectVendor(vendorId)
         );
     }
+    @GetMapping
+    public ResponseEntity<List<VendorResponse>> getAllVendors() {
+
+        return ResponseEntity.ok(
+                vendorService.getAllVendors()
+        );
+    }
+    @GetMapping("/{vendorId}")
+    public ResponseEntity<VendorResponse> getVendorById(
+            @PathVariable Long vendorId
+    ) {
+
+        return ResponseEntity.ok(
+                vendorService.getVendorById(vendorId)
+        );
+    }
 }

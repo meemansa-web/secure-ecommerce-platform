@@ -461,5 +461,24 @@ public class VendorServiceImpl implements VendorService {
                     "Password changed successfully"
             );
     }
-    
+        @Override
+        public List<VendorResponse> getAllVendors() {
+
+            return vendorRepository.findAll()
+                    .stream()
+                    .map(this::mapToVendorResponse)
+                    .toList();
+        }
+        @Override
+        public VendorResponse getVendorById(Long vendorId) {
+
+            Vendor vendor = vendorRepository.findById(vendorId)
+                    .orElseThrow(() ->
+                            new VendorNotFoundException(
+                                    "Vendor not found with id: " + vendorId
+                            )
+                    );
+
+            return mapToVendorResponse(vendor);
+        }
 }
