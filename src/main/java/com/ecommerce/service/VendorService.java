@@ -21,6 +21,8 @@ public interface VendorService {
     VendorResponse approveVendor(Long vendorId);
 
     VendorResponse rejectVendor(Long vendorId);
+    List<VendorResponse> getAllVendors();
+    VendorResponse getVendorById(Long vendorId);
     VendorProfileResponse getCurrentVendor(String email);
     VendorProfileResponse updateVendorProfile(
             String email,
