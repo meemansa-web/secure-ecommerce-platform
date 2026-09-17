@@ -62,6 +62,9 @@ public class SecurityConfig {
                         .permitAll()
                          
                         .requestMatchers("/api/categories/**").permitAll()
+                        
+                        .requestMatchers("/api/products/**").permitAll()
+
                         // Customer APIs
                         .requestMatchers("/api/customer/**")
                         .hasRole("CUSTOMER")
