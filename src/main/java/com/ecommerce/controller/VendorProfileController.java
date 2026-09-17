@@ -18,9 +18,7 @@ public class VendorProfileController {
 
     private final VendorService vendorService;
 
-    public VendorProfileController(
-            VendorService vendorService
-    ) {
+    public VendorProfileController(VendorService vendorService) {
         this.vendorService = vendorService;
     }
 
@@ -31,28 +29,24 @@ public class VendorProfileController {
 
         String email = authentication.getName();
 
-        VendorProfileResponse response =
-                vendorService.getCurrentVendor(email);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                vendorService.getCurrentVendor(email)
+        );
     }
+
     @PutMapping("/profile")
     public ResponseEntity<VendorProfileResponse> updateProfile(
             Authentication authentication,
             @Valid @RequestBody UpdateVendorProfileRequest request
     ) {
 
-        String email =
-                authentication.getName();
+        String email = authentication.getName();
 
-        VendorProfileResponse response =
-                vendorService.updateVendorProfile(
-                        email,
-                        request
-                );
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                vendorService.updateVendorProfile(email, request)
+        );
     }
+
     @PutMapping("/change-password")
     public ResponseEntity<MessageResponse> changePassword(
             Authentication authentication,
@@ -61,12 +55,8 @@ public class VendorProfileController {
 
         String email = authentication.getName();
 
-        MessageResponse response =
-                vendorService.changePassword(
-                        email,
-                        request
-                );
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                vendorService.changePassword(email, request)
+        );
     }
 }
