@@ -3,6 +3,7 @@ package com.ecommerce.service;
 import com.ecommerce.dto.request.ProductRequest;
 import com.ecommerce.dto.response.ProductResponse;
 import com.ecommerce.entity.Category;
+import com.ecommerce.entity.Inventory;
 import com.ecommerce.entity.Product;
 import com.ecommerce.entity.User;
 import com.ecommerce.entity.Vendor;
@@ -12,9 +13,12 @@ import com.ecommerce.exception.ProductNotFoundException;
 import com.ecommerce.exception.UserNotFoundException;
 import com.ecommerce.exception.VendorNotFoundException;
 import com.ecommerce.repository.CategoryRepository;
+import com.ecommerce.repository.InventoryRepository;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.repository.VendorRepository;
+
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -27,20 +31,22 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final VendorRepository vendorRepository;
+    private final InventoryRepository inventoryRepository;
 
-    public ProductServiceImpl(
-            ProductRepository productRepository,
-            CategoryRepository categoryRepository,
-            UserRepository userRepository,
-            VendorRepository vendorRepository
-    ) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-        this.userRepository = userRepository;
-        this.vendorRepository = vendorRepository;
-    }
+    
 
-    @Override
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository,
+			UserRepository userRepository, VendorRepository vendorRepository, InventoryRepository inventoryRepository) {
+		super();
+		this.productRepository = productRepository;
+		this.categoryRepository = categoryRepository;
+		this.userRepository = userRepository;
+		this.vendorRepository = vendorRepository;
+		this.inventoryRepository = inventoryRepository;
+	}
+
+	@Override
+	@Transactional
     public ProductResponse createProduct(
             String vendorEmail,
             ProductRequest request
@@ -100,7 +106,14 @@ public class ProductServiceImpl implements ProductService {
 
         Product savedProduct =
                 productRepository.save(product);
+        Inventory inventory = new Inventory();
 
+        inventory.setProduct(savedProduct);
+        inventory.setQuantity(0);
+        inventory.setLowStockThreshold(5);
+
+        inventoryRepository.save(inventory);
+          
         return mapToResponse(savedProduct);
     }
 
