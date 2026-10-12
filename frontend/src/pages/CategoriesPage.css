@@ -1,0 +1,521 @@
+/* ==============================================================================
+   MODIMAL EDITORIAL CATEGORIES PAGE STYLING (Dual Dark & Light Mode)
+   ============================================================================== */
+
+.editorial-categories-page {
+  padding: 5rem 0 8rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  flex: 1;
+  transition: background-color 0.28s ease, color 0.28s ease;
+}
+
+.categories-hero-header {
+  max-width: 640px;
+  margin-bottom: 4rem;
+  padding-bottom: 2.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.categories-header-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-top: 0.75rem;
+}
+
+.categories-editorial-display {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+}
+
+.cat-display-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.cat-display-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
+}
+
+.cat-display-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cat-display-card:hover .cat-display-img {
+  transform: scale(1.05);
+}
+
+.cat-display-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.45) 100%);
+}
+
+.cat-display-details {
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cat-pill-tag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color: var(--accent-olive);
+}
+
+.cat-name-heading {
+  font-size: 1.65rem;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.cat-sub-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 0.75rem;
+}
+
+.cat-cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color: var(--text-primary);
+  border-bottom: 1.5px solid var(--text-primary);
+  width: fit-content;
+  padding-bottom: 2px;
+  transition: gap 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.cat-display-card:hover .cat-cta-link {
+  gap: 0.75rem;
+  color: var(--accent-olive);
+  border-bottom-color: var(--accent-olive);
+}
+
+@media (max-width: 768px) {
+  .categories-editorial-display {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+}
+
+/* ==============================================================================
+   INTERACTIVE VISUAL CATALOG BLOCK
+   ============================================================================== */
+.categories-visual-block {
+  margin-bottom: 4rem;
+}
+
+.categories-visual-block .visual-category-section {
+  padding: 2rem 0;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+/* ==============================================================================
+   DIMENSION SECTIONS (Gender, Categories, Brands - "alag alag hona chahiye")
+   ============================================================================== */
+.category-dimension-section {
+  margin-bottom: 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.dimension-section-title-wrap {
+  margin-bottom: 2.5rem;
+  max-width: 640px;
+}
+
+.dimension-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.gender-accent {
+  background: rgba(184, 134, 11, 0.12);
+  color: #b8860b;
+  border: 1px solid rgba(184, 134, 11, 0.3);
+}
+
+[data-theme='dark'] .gender-accent {
+  background: rgba(212, 175, 55, 0.15);
+  color: #d4af37;
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.category-accent {
+  background: rgba(74, 93, 79, 0.12);
+  color: var(--accent-olive);
+  border: 1px solid rgba(74, 93, 79, 0.3);
+}
+
+.brand-accent {
+  background: rgba(142, 68, 173, 0.1);
+  color: #8e44ad;
+  border: 1px solid rgba(142, 68, 173, 0.28);
+}
+
+[data-theme='dark'] .brand-accent {
+  background: rgba(175, 122, 197, 0.15);
+  color: #bb86fc;
+  border-color: rgba(175, 122, 197, 0.35);
+}
+
+.dimension-main-title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.dimension-sub-desc {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* --- SECTION 1: GENDER EDITORIAL GRID --- */
+.gender-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.gender-editorial-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.gender-editorial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  border-color: #d4af37;
+}
+
+.gender-media-wrap {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.gender-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gender-editorial-card:hover .gender-img {
+  transform: scale(1.06);
+}
+
+.gender-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.gender-card-meta {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.gender-sub-tag {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #b8860b;
+  text-transform: uppercase;
+}
+
+[data-theme='dark'] .gender-sub-tag {
+  color: #d4af37;
+}
+
+.gender-card-heading {
+  font-size: 1.35rem;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.gender-card-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+.gender-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin-top: auto;
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.gender-editorial-card:hover .gender-action-link {
+  gap: 0.65rem;
+  color: #d4af37;
+}
+
+/* --- SECTION 2: CATEGORY EDITORIAL GRID --- */
+.category-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.category-showcase-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: transform 0.28s ease, border-color 0.28s ease;
+}
+
+.category-showcase-card:hover {
+  transform: translateY(-4px);
+  border-color: #d4af37;
+}
+
+.cat-card-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.cat-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.category-showcase-card:hover .cat-card-img {
+  transform: scale(1.06);
+}
+
+.cat-card-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+.cat-card-details {
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cat-card-tag {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-olive);
+}
+
+.cat-card-name {
+  font-size: 1.15rem;
+  font-family: var(--font-serif);
+  margin: 0;
+}
+
+.cat-card-subtitle {
+  font-size: 0.78125rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.cat-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.category-showcase-card:hover .cat-card-link {
+  gap: 0.55rem;
+  color: #d4af37;
+}
+
+/* --- SECTION 3: BRANDS EDITORIAL GRID --- */
+.brands-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.brand-editorial-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.35rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.28s ease;
+}
+
+.brand-editorial-card:hover {
+  transform: translateY(-4px);
+  border-color: #d4af37;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.12);
+}
+
+.brand-editorial-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.brand-tag-pill {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  background: rgba(212, 175, 55, 0.12);
+  color: #b8860b;
+}
+
+[data-theme='dark'] .brand-tag-pill {
+  color: #d4af37;
+}
+
+.brand-stat-icon {
+  color: #d4af37;
+}
+
+.brand-avatar-wrap {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0.25rem 0 1rem;
+  border: 2px solid #d4af37;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.brand-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brand-title-header {
+  font-size: 1.25rem;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  margin: 0;
+}
+
+.brand-origin-pill {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+}
+
+.brand-story-text {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.brand-explore-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin-top: auto;
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.brand-editorial-card:hover .brand-explore-btn {
+  gap: 0.55rem;
+  color: #d4af37;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1100px) {
+  .gender-editorial-grid,
+  .category-editorial-grid,
+  .brands-editorial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .gender-editorial-grid,
+  .category-editorial-grid,
+  .brands-editorial-grid {
+    grid-template-columns: 1fr;
+  }
+}
