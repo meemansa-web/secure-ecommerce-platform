@@ -4,13 +4,8 @@ import {
   Search,
   ArrowUpDown,
   ChevronDown,
-  Users,
-  Layers,
-  Award,
-  Sparkles,
   X,
   Filter,
-  Check,
 } from 'lucide-react'
 
 import { getAllProducts } from '../api/productApi'
@@ -377,101 +372,7 @@ export default function ProductsPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 3. THREE SEPARATE FILTER BARS (Gender, Category, Brand)                   */}
-        {/* ========================================================================= */}
-        <div className="multi-dimension-filter-hub">
-          {/* BAR 1: GENDER-BASED */}
-          <div className="dimension-filter-row">
-            <div className="dimension-label-badge gender-badge">
-              <Users size={13} />
-              <span>GENDER</span>
-            </div>
-            <div className="dimension-pills-scroll">
-              {GENDER_OPTIONS.map((g) => {
-                const isActive = genderParam === g.id
-                return (
-                  <button
-                    key={g.id}
-                    type="button"
-                    className={`dim-filter-pill ${isActive ? 'pill-active' : ''}`}
-                    onClick={() => handleGenderChange(g.id)}
-                  >
-                    <span>{g.label}</span>
-                    {isActive && <Check size={11} className="pill-check-icon" />}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* BAR 2: CATEGORY-BASED */}
-          <div className="dimension-filter-row">
-            <div className="dimension-label-badge category-badge">
-              <Layers size={13} />
-              <span>CATEGORIES</span>
-            </div>
-            <div className="dimension-pills-scroll">
-              <button
-                type="button"
-                className={`dim-filter-pill ${categoryParam === 'all' ? 'pill-active' : ''}`}
-                onClick={() => handleCategoryChange('all')}
-              >
-                <span>All Categories</span>
-                {categoryParam === 'all' && <Check size={11} className="pill-check-icon" />}
-              </button>
-              {CATEGORY_OPTIONS.map((c) => {
-                const isActive = categoryParam === c.slug
-                return (
-                  <button
-                    key={c.id}
-                    type="button"
-                    className={`dim-filter-pill ${isActive ? 'pill-active' : ''}`}
-                    onClick={() => handleCategoryChange(c.slug)}
-                  >
-                    <span>{c.label}</span>
-                    {isActive && <Check size={11} className="pill-check-icon" />}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* BAR 3: BRAND-BASED */}
-          <div className="dimension-filter-row">
-            <div className="dimension-label-badge brand-badge">
-              <Award size={13} />
-              <span>BRANDS</span>
-            </div>
-            <div className="dimension-pills-scroll">
-              <button
-                type="button"
-                className={`dim-filter-pill ${brandParam === 'all' ? 'pill-active' : ''}`}
-                onClick={() => handleBrandChange('all')}
-              >
-                <span>All Brands</span>
-                {brandParam === 'all' && <Check size={11} className="pill-check-icon" />}
-              </button>
-              {BRAND_OPTIONS.map((b) => {
-                const isActive = brandParam === b.id
-                return (
-                  <button
-                    key={b.id}
-                    type="button"
-                    className={`dim-filter-pill ${isActive ? 'pill-active' : ''}`}
-                    onClick={() => handleBrandChange(b.id)}
-                  >
-                    <span>{b.label}</span>
-                    <span className="pill-badge-tag">{b.badge.split(' ')[0]}</span>
-                    {isActive && <Check size={11} className="pill-check-icon" />}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* 4. ACTIVE APPLIED FILTERS CHIPS & CLEAR BUTTON                           */}
+        {/* 3. ACTIVE APPLIED FILTERS CHIPS & CLEAR BUTTON                           */}
         {/* ========================================================================= */}
         {hasActiveFilters && (
           <div className="applied-filters-strip">

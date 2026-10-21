@@ -187,12 +187,8 @@ export default function LoginPage() {
                 disabled={loading}
               />
             </div>
-            {fieldErrors.email ? (
+            {fieldErrors.email && (
               <span className="login-field-error">{fieldErrors.email}</span>
-            ) : (
-              <span className="login-field-helper">
-                Please enter your registered email address (e.g. <code>you@example.com</code>).
-              </span>
             )}
           </div>
 
