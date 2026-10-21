@@ -1,0 +1,67 @@
+/* ==============================================================================
+   VENDOR STORE PROFILE STYLES
+   ============================================================================== */
+
+.vendor-profile-root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.profile-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #22c55e;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.v-profile-form-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 2.25rem;
+  max-width: 860px;
+}
+
+.profile-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.profile-section-block:last-of-type {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.profile-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.profile-section-title svg {
+  color: var(--accent-olive);
+}
+
+.input-disabled {
+  opacity: 0.65;
+  background-color: var(--bg-secondary) !important;
+  cursor: not-allowed;
+}

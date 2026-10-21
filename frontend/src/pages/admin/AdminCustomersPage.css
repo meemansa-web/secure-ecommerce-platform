@@ -1,0 +1,28 @@
+/* AdminCustomersPage.css */
+.admin-customers-root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.customer-full-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+}
+
+.customer-id-pill {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+.customer-username {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.customer-email-text {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}

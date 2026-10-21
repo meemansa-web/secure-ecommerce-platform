@@ -1,0 +1,56 @@
+/* ==============================================================================
+   MODIMAL EDITORIAL LOADING SPINNER STYLING
+   ============================================================================== */
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+  width: 100%;
+}
+
+.loading-fullscreen {
+  min-height: 60vh;
+}
+
+.loading-spinner-wrapper {
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-message {
+  margin-top: 1rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.loading-text-sm {
+  font-size: 0.75rem;
+}
+
+.loading-text-md {
+  font-size: 0.8125rem;
+}
+
+.loading-text-lg {
+  font-size: 0.9375rem;
+}

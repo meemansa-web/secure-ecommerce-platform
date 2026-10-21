@@ -1,0 +1,434 @@
+/* ==============================================================================
+   MODIMAL EDITORIAL CUSTOMER REGISTRATION STYLING (Dual Theme)
+   ============================================================================== */
+
+.register-page-root {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1.5rem;
+  background-color: var(--bg-primary);
+  transition: background-color 0.28s ease, color 0.28s ease;
+}
+
+.register-container {
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.register-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 3.5rem 3rem;
+  box-shadow: var(--shadow-card);
+  transition: background-color 0.28s ease, border-color 0.28s ease;
+}
+
+/* Logo Header */
+.register-logo-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+}
+
+.register-brand-logo-img {
+  height: 58px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.register-brand-logo-img:hover {
+  transform: scale(1.04);
+}
+
+/* Header */
+.register-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.register-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color: var(--accent-olive);
+  background-color: var(--accent-olive-light);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 1rem;
+}
+
+.register-title {
+  font-size: 2.25rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.register-subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* Form */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-field-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-primary);
+}
+
+.required-star {
+  color: var(--sale-badge);
+}
+
+.form-field-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xs);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field-input:focus {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--border-subtle);
+}
+
+.form-field-input.field-error {
+  border-color: var(--sale-badge);
+  background-color: var(--sale-badge-bg);
+}
+
+.field-error-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--sale-badge);
+  margin-top: 0.2rem;
+}
+
+/* Password Input Wrapper with Toggle */
+.password-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrap .form-field-input {
+  padding-right: 2.75rem;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+  transition: color 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Global Error Banner */
+.register-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.95rem 1.25rem;
+  background-color: var(--sale-badge-bg);
+  border: 1px solid var(--sale-badge);
+  border-radius: var(--radius-xs);
+  color: var(--sale-badge);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.error-banner-icon {
+  flex-shrink: 0;
+}
+
+/* Submit Row */
+.form-submit-row {
+  margin-top: 0.75rem;
+}
+
+.register-terms-text {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+/* Card Footer */
+.register-card-footer {
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.register-switch-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.register-switch-link {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  margin-left: 0.25rem;
+}
+
+.register-switch-link:hover {
+  opacity: 0.75;
+}
+
+/* Success Card View */
+.register-success-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.success-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--success-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.success-icon {
+  color: var(--success);
+}
+
+.success-title {
+  font-size: 1.75rem;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.success-desc {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+}
+
+.success-meta {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 1rem 1.5rem;
+  width: 100%;
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.redirect-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Account Type Tabs */
+.account-type-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  background-color: var(--bg-secondary);
+  padding: 0.35rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 2rem;
+}
+
+.type-tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.type-tab-btn:hover:not(.active) {
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+.type-tab-btn.active {
+  background-color: var(--bg-surface);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.type-tab-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.type-tab-name {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.type-tab-hint {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+/* Vendor Section Styling */
+.vendor-fields-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border-medium);
+  margin-top: 0.5rem;
+  animation: fadeIn 0.25s ease;
+}
+
+.section-divider-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color: var(--accent-olive);
+}
+
+.vendor-info-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.vendor-info-notice svg {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  color: var(--accent-olive);
+}
+
+.form-field-textarea {
+  resize: vertical;
+  min-height: 70px;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.status-badge-pending {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.4rem 0.85rem;
+  background-color: var(--accent-olive-light, rgba(200, 160, 50, 0.15));
+  color: var(--accent-olive);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.success-icon-pending {
+  color: var(--accent-olive);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .register-card {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .register-title {
+    font-size: 1.85rem;
+  }
+}

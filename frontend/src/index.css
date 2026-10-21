@@ -1,0 +1,322 @@
+/* ==============================================================================
+   MODIMAL LUXURY EDITORIAL DESIGN SYSTEM
+   Theme: Dual Dark & Light Mode, Editorial Hierarchy, Premium Micro-interactions
+   ============================================================================== */
+
+:root,
+[data-theme="light"] {
+  /* Surfaces & Backgrounds (Modern Luminous Slate & Vibrant Glass) */
+  --bg-primary: #f8f9fd;
+  --bg-surface: #ffffff;
+  --bg-secondary: #f1f4fb;
+  --bg-tertiary: #e3e8f5;
+  --bg-card: #ffffff;
+  --bg-nav: rgba(248, 249, 253, 0.9);
+  --bg-overlay: rgba(248, 249, 253, 0.95);
+  --bg-drawer: #ffffff;
+
+  /* Typography Palette (Deep Slate & Charcoal) */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+  --text-inverse: #f8f9fd;
+
+  /* Colorful Accent Palette */
+  --accent-indigo: #6366f1;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-olive: #6366f1;
+  --accent-olive-hover: #4f46e5;
+  --accent-olive-light: rgba(99, 102, 241, 0.1);
+  --accent-gold: #f59e0b;
+  --accent-gold-light: rgba(245, 158, 11, 0.12);
+
+  /* Status Colors */
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.12);
+  --sale-badge: #ec4899;
+  --sale-badge-bg: rgba(236, 72, 153, 0.12);
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(99, 102, 241, 0.12);
+  --border-medium: rgba(99, 102, 241, 0.22);
+  --border-strong: #0f172a;
+
+  /* Elevation Shadows with Colorful Depth */
+  --shadow-subtle: 0 4px 20px rgba(99, 102, 241, 0.05);
+  --shadow-card: 0 8px 24px -4px rgba(99, 102, 241, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 20px 38px -10px rgba(99, 102, 241, 0.2), 0 0 20px rgba(236, 72, 153, 0.08);
+  --shadow-drawer: -8px 0 32px rgba(15, 23, 42, 0.15);
+
+  /* Scrim Gradient for Hero */
+  --hero-scrim: linear-gradient(
+    90deg,
+    rgba(251, 250, 247, 0.96) 0%,
+    rgba(251, 250, 247, 0.82) 48%,
+    rgba(251, 250, 247, 0.2) 100%
+  );
+  --hero-scrim-mobile: linear-gradient(
+    180deg,
+    rgba(251, 250, 247, 0.94) 0%,
+    rgba(251, 250, 247, 0.82) 65%,
+    rgba(251, 250, 247, 0.5) 100%
+  );
+
+  /* Quick action / Button inverted values */
+  --btn-primary-bg: #171716;
+  --btn-primary-text: #fbfaf7;
+  --btn-primary-hover: #30302e;
+
+  /* Compatibility & Semantic Aliases */
+  --bg: var(--bg-primary);
+  --border: var(--border-subtle);
+  --card-bg: var(--bg-card);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-surface: var(--bg-surface);
+  --color-border: var(--border-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent-olive);
+  --color-accent-subtle: var(--accent-olive-light);
+  --primary: var(--accent-olive);
+  --primary-light: var(--accent-olive-light);
+  --text-main: var(--text-primary);
+  --success-light: var(--success-bg);
+  --shadow-sm: var(--shadow-subtle);
+  --shadow-md: var(--shadow-card);
+  --shadow-lg: var(--shadow-hover);
+  --shadow: var(--shadow-card);
+}
+
+[data-theme="dark"] {
+  /* Surfaces & Backgrounds (Obsidian & Deep Space Charcoal) */
+  --bg-primary: #0c0d0f;
+  --bg-surface: #131418;
+  --bg-secondary: #1a1c22;
+  --bg-tertiary: #22252e;
+  --bg-card: #131418;
+  --bg-nav: rgba(12, 13, 15, 0.88);
+  --bg-overlay: rgba(12, 13, 15, 0.95);
+  --bg-drawer: #131418;
+
+  /* Typography Palette (Bright Off-White & Crisp Silver) */
+  --text-primary: #f5f5f7;
+  --text-secondary: #b3b4be;
+  --text-muted: #797b88;
+  --text-subtle: #4e505c;
+  --text-inverse: #0c0d0f;
+
+  /* Colorful Accent Palette (Luminous Neon & Jewel Tones in Dark Mode) */
+  --accent-indigo: #818cf8;
+  --accent-purple: #c084fc;
+  --accent-pink: #f472b6;
+  --accent-cyan: #38bdf8;
+  --accent-emerald: #34d399;
+  --accent-amber: #fbbf24;
+  --accent-olive: #818cf8;
+  --accent-olive-hover: #a5b4fc;
+  --accent-olive-light: rgba(129, 140, 248, 0.16);
+  --accent-gold: #fbbf24;
+  --accent-gold-light: rgba(251, 191, 36, 0.15);
+
+  /* Status Colors */
+  --success: #34d399;
+  --success-bg: rgba(52, 211, 153, 0.16);
+  --sale-badge: #f472b6;
+  --sale-badge-bg: rgba(244, 114, 182, 0.18);
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(129, 140, 248, 0.25);
+  --border-strong: #f8f9fd;
+
+  /* Elevation Shadows */
+  --shadow-subtle: 0 4px 24px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.55);
+  --shadow-hover: 0 20px 44px -8px rgba(0, 0, 0, 0.7), 0 0 25px rgba(129, 140, 248, 0.18);
+  --shadow-drawer: -8px 0 32px rgba(0, 0, 0, 0.8);
+
+  /* Scrim Gradient for Hero */
+  --hero-scrim: linear-gradient(
+    90deg,
+    rgba(12, 13, 15, 0.96) 0%,
+    rgba(12, 13, 15, 0.85) 50%,
+    rgba(12, 13, 15, 0.35) 100%
+  );
+  --hero-scrim-mobile: linear-gradient(
+    180deg,
+    rgba(12, 13, 15, 0.95) 0%,
+    rgba(12, 13, 15, 0.85) 65%,
+    rgba(12, 13, 15, 0.6) 100%
+  );
+
+  /* Quick action / Button inverted values */
+  --btn-primary-bg: #f5f5f7;
+  --btn-primary-text: #0c0d0f;
+  --btn-primary-hover: #e0e0e4;
+
+  /* Compatibility & Semantic Aliases */
+  --bg: var(--bg-primary);
+  --border: var(--border-subtle);
+  --card-bg: var(--bg-card);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-surface: var(--bg-surface);
+  --color-border: var(--border-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent-olive);
+  --color-accent-subtle: var(--accent-olive-light);
+  --primary: var(--accent-olive);
+  --primary-light: var(--accent-olive-light);
+  --text-main: var(--text-primary);
+  --success-light: var(--success-bg);
+  --shadow-sm: var(--shadow-subtle);
+  --shadow-md: var(--shadow-card);
+  --shadow-lg: var(--shadow-hover);
+  --shadow: var(--shadow-card);
+}
+
+/* Global Font and Transition Tokens */
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, Garamond, serif;
+
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-wider: 0.1em;
+  --tracking-widest: 0.14em;
+
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius: var(--radius-md);
+  --radius-pill: 9999px;
+
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+
+  --container-max: 1360px;
+  --header-height: 70px;
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.28s ease, color 0.28s ease;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.28s ease, color 0.28s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Utility Containers */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* Editorial Eyebrow Tag */
+.editorial-eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color: var(--accent-olive);
+  margin-bottom: 0.75rem;
+}
+
+/* Editorial Titles */
+.editorial-title {
+  font-size: 2.35rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.editorial-title-serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 768px) {
+  .editorial-title {
+    font-size: 1.85rem;
+  }
+}
