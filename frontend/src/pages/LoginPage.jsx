@@ -1,24 +1,31 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import {
   Lock,
   Mail,
   Eye,
   EyeOff,
-  ArrowRight,
   AlertCircle,
   CheckCircle2,
+  Smartphone,
+  ArrowRight,
+  RefreshCw,
+  ArrowLeft,
+  Loader2,
 } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
-import Button from '../components/common/Button'
+import { sendLoginOtp } from '../api/authApi'
 import './LoginPage.css'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { login, isAuthenticated, role } = useAuth()
+  const { login, loginWithOtp, isAuthenticated, role } = useAuth()
 
-  // Form State
+  // Primary Login Mode: 'PASSWORD' (Default) | 'OTP' (Alternative)
+  const [loginMode, setLoginMode] = useState('PASSWORD')
+
+  // Password Form State
   const [formData, setFormData] = useState({
     email: location.state?.registeredEmail || '',
     password: '',
@@ -26,45 +33,76 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [fieldErrors, setFieldErrors] = useState({})
 
-  // Shared States
+  // OTP Form State
+  const [otpStep, setOtpStep] = useState(1) // 1: Enter Identifier, 2: Enter 6 digits
+  const [otpIdentifier, setOtpIdentifier] = useState(location.state?.registeredEmail || '')
+  const [otpCode, setOtpCode] = useState(['', '', '', '', '', ''])
+  const [otpDetails, setOtpDetails] = useState(null)
+  const [otpCountdown, setOtpCountdown] = useState(0)
+  const [resendingOtp, setResendingOtp] = useState(false)
+  const otpInputRefs = useRef([])
+
+  // Status States
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [infoMessage, setInfoMessage] = useState(
     location.state?.registeredSuccess
-      ? 'Account created successfully! A welcome email was sent to your registered email.'
+      ? 'Account created successfully! Please sign in below.'
       : null
   )
-
-  // Google Login Dialog State
-  const [showGoogleModal, setShowGoogleModal] = useState(false)
 
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      if (role === 'ADMIN') {
-        const destination = location.state?.from?.pathname?.startsWith('/admin')
-          ? location.state.from.pathname
-          : '/admin/dashboard'
-        navigate(destination, { replace: true })
-      } else if (role === 'CUSTOMER') {
-        const fromPath = location.state?.from?.pathname
-        const destination = fromPath && !fromPath.startsWith('/admin') ? fromPath : '/'
-        navigate(destination, { replace: true })
-      } else if (role === 'VENDOR') {
-        const destination = location.state?.from?.pathname?.startsWith('/vendor')
-          ? location.state.from.pathname
-          : '/vendor/dashboard'
-        navigate(destination, { replace: true })
-      }
+      redirectUserByRole(role)
     }
-  }, [isAuthenticated, role, navigate, location])
+  }, [isAuthenticated, role])
+
+  // Countdown timer for OTP resend
+  useEffect(() => {
+    let timer = null
+    if (otpCountdown > 0) {
+      timer = setInterval(() => {
+        setOtpCountdown((prev) => prev - 1)
+      }, 1000)
+    }
+    return () => {
+      if (timer) clearInterval(timer)
+    }
+  }, [otpCountdown])
+
+  const redirectUserByRole = (userRole) => {
+    if (userRole === 'ADMIN') {
+      const dest = location.state?.from?.pathname?.startsWith('/admin')
+        ? location.state.from.pathname
+        : '/admin/dashboard'
+      navigate(dest, { replace: true })
+    } else if (userRole === 'VENDOR') {
+      const dest = location.state?.from?.pathname?.startsWith('/vendor')
+        ? location.state.from.pathname
+        : '/vendor/dashboard'
+      navigate(dest, { replace: true })
+    } else {
+      const fromPath = location.state?.from?.pathname
+      const dest = fromPath && !fromPath.startsWith('/admin') && !fromPath.startsWith('/vendor')
+        ? fromPath
+        : '/'
+      navigate(dest, { replace: true })
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // PASSWORD LOGIN HANDLERS
+  // --------------------------------------------------------------------------
 
   const validatePasswordForm = () => {
     const errs = {}
-    if (!formData.email.trim()) {
+    const trimmedEmail = formData.email.trim()
+
+    if (!trimmedEmail) {
       errs.email = 'Email address is required'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      errs.email = 'Please enter a valid email address (e.g. name@example.com)'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      errs.email = 'Please enter a valid email address'
     }
 
     if (!formData.password) {
@@ -95,254 +133,433 @@ export default function LoginPage() {
       redirectUserByRole(response.role)
     } catch (err) {
       setLoading(false)
-      if (err.response) {
-        const { status, data } = err.response
-        const serverMessage = data?.message || data?.error
-        if (status === 401) {
-          setError(
-            serverMessage ||
-              'Invalid email or password. Please make sure you are entering your registered email address (not username).'
-          )
-        } else if (status === 403) {
-          setError(
-            serverMessage ||
-              'Your account is pending verification or approval.'
-          )
-        } else {
-          setError(serverMessage || 'Sign in failed. Please check credentials.')
-        }
+      if (!err.response) {
+        setError('Unable to reach the server. Please ensure the backend is running.')
       } else {
-        setError(err.message || 'An unexpected error occurred.')
+        const { status, data } = err.response
+        const serverMsg = data?.message || data?.error
+        if (status === 401) {
+          setError(serverMsg || 'Invalid email or password. Please verify your credentials.')
+        } else if (status === 403) {
+          setError(serverMsg || 'Your account is disabled, locked, or pending approval.')
+        } else if (status === 404) {
+          setError(serverMsg || 'No account registered with this email.')
+        } else {
+          setError(serverMsg || 'Sign in failed. Please check your credentials.')
+        }
       }
     }
   }
 
-  const redirectUserByRole = (userRole) => {
-    if (userRole === 'ADMIN') {
-      const dest = location.state?.from?.pathname?.startsWith('/admin')
-        ? location.state.from.pathname
-        : '/admin/dashboard'
-      navigate(dest, { replace: true })
-    } else if (userRole === 'VENDOR') {
-      const dest = location.state?.from?.pathname?.startsWith('/vendor')
-        ? location.state.from.pathname
-        : '/vendor/dashboard'
-      navigate(dest, { replace: true })
-    } else {
-      const fromPath = location.state?.from?.pathname
-      const dest = fromPath && !fromPath.startsWith('/admin') ? fromPath : '/'
-      navigate(dest, { replace: true })
+  // --------------------------------------------------------------------------
+  // OTP LOGIN HANDLERS
+  // --------------------------------------------------------------------------
+
+  const handleSendOtp = async (e) => {
+    if (e) e.preventDefault()
+    setError(null)
+    setInfoMessage(null)
+
+    const raw = otpIdentifier.trim()
+    if (!raw) {
+      setError('Please enter your email or mobile number.')
+      return
+    }
+
+    const isEmail = raw.includes('@')
+    if (isEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) {
+      setError('Please enter a valid email address')
+      return
+    }
+
+    if (!isEmail) {
+      const cleanDigits = raw.replace(/\D/g, '')
+      if (cleanDigits.length < 10) {
+        setError('Please enter a valid 10-digit mobile number')
+        return
+      }
+    }
+
+    setLoading(true)
+    try {
+      const res = await sendLoginOtp({ identifier: raw, purpose: 'LOGIN' })
+      setOtpDetails(res)
+      setOtpStep(2)
+      setOtpCountdown(60)
+      setOtpCode(['', '', '', '', '', ''])
+      setInfoMessage(res.message || `Verification code sent to ${res.maskedIdentifier}`)
+
+      setTimeout(() => {
+        if (otpInputRefs.current[0]) {
+          otpInputRefs.current[0].focus()
+        }
+      }, 100)
+    } catch (err) {
+      if (!err.response) {
+        setError('Unable to reach the server. Please ensure the backend is running.')
+      } else {
+        const serverMsg = err.response?.data?.message || err.response?.data?.error
+        setError(serverMsg || 'Failed to send verification code. Please check details.')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleResendOtp = async () => {
+    if (otpCountdown > 0 || resendingOtp) return
+    setError(null)
+    setResendingOtp(true)
+
+    try {
+      const res = await sendLoginOtp({ identifier: otpIdentifier.trim(), purpose: 'LOGIN' })
+      setOtpDetails(res)
+      setOtpCountdown(60)
+      setInfoMessage(`New verification code sent to ${res.maskedIdentifier}`)
+    } catch (err) {
+      if (!err.response) {
+        setError('Unable to reach the server. Please try again.')
+      } else {
+        const serverMsg = err.response?.data?.message || err.response?.data?.error
+        setError(serverMsg || 'Could not resend code. Please try again.')
+      }
+    } finally {
+      setResendingOtp(false)
+    }
+  }
+
+  const handleOtpBoxChange = (index, value) => {
+    const cleanVal = value.replace(/\D/g, '')
+    if (!cleanVal && value !== '') return
+
+    const newCode = [...otpCode]
+
+    // Handle paste of 6 digits
+    if (cleanVal.length > 1) {
+      const chars = cleanVal.slice(0, 6).split('')
+      for (let i = 0; i < 6; i++) {
+        newCode[i] = chars[i] || ''
+      }
+      setOtpCode(newCode)
+      const nextFocus = Math.min(chars.length, 5)
+      otpInputRefs.current[nextFocus]?.focus()
+      return
+    }
+
+    newCode[index] = cleanVal
+    setOtpCode(newCode)
+
+    if (cleanVal && index < 5) {
+      otpInputRefs.current[index + 1]?.focus()
+    }
+  }
+
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === 'Backspace' && !otpCode[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus()
+    }
+  }
+
+  const handleVerifyOtpSubmit = async (e) => {
+    e.preventDefault()
+    setError(null)
+    const codeStr = otpCode.join('')
+
+    if (codeStr.length !== 6) {
+      setError('Please enter the complete 6-digit code.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const authResponse = await loginWithOtp(otpIdentifier.trim(), codeStr)
+      redirectUserByRole(authResponse.role)
+    } catch (err) {
+      setLoading(false)
+      if (!err.response) {
+        setError('Unable to reach the server. Please try again.')
+      } else {
+        const serverMsg = err.response?.data?.message || err.response?.data?.error
+        setError(serverMsg || 'Invalid verification code. Please check and try again.')
+      }
     }
   }
 
   return (
-    <div className="login-page-root">
-      <div className="login-card">
+    <div className="signin-root">
+      <div className="signin-card">
         {/* Brand Logo Header */}
-        <div className="login-logo-header">
-          <Link to="/" className="login-logo-link">
-            <img src="/logo.png" alt="Nivora Logo" className="login-brand-logo-img" />
+        <div className="signin-brand-header">
+          <Link to="/" className="signin-logo-link" aria-label="Return to Storefront">
+            <img src="/logo.png" alt="Nivora" className="signin-brand-logo" />
           </Link>
+          <h1 className="signin-title">Welcome back</h1>
+          <p className="signin-subtitle">Sign in to your account</p>
         </div>
 
-        <h1 className="login-title">Sign In</h1>
-        <p className="login-subtitle">
-          Access your Nivora shopping bag, orders, and curated wishlist.
-        </p>
+        {/* Minimal Secondary Mode Switcher */}
+        <div className="signin-mode-switcher" role="tablist" aria-label="Sign In Method">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={loginMode === 'PASSWORD'}
+            className={`signin-mode-pill ${loginMode === 'PASSWORD' ? 'active' : ''}`}
+            onClick={() => {
+              setLoginMode('PASSWORD')
+              setError(null)
+            }}
+          >
+            Password
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={loginMode === 'OTP'}
+            className={`signin-mode-pill ${loginMode === 'OTP' ? 'active' : ''}`}
+            onClick={() => {
+              setLoginMode('OTP')
+              setError(null)
+            }}
+          >
+            OTP Code
+          </button>
+        </div>
 
-        {/* Info Message */}
+        {/* Feedback Alerts */}
         {infoMessage && (
-          <div className="login-alert login-alert-success" role="status">
-            <CheckCircle2 size={18} className="alert-icon" />
+          <div className="signin-alert signin-alert-success" role="status">
+            <CheckCircle2 size={16} className="alert-icon" />
             <span>{infoMessage}</span>
           </div>
         )}
 
-        {/* Error Alert */}
         {error && (
-          <div className="login-alert login-alert-error" role="alert">
-            <AlertCircle size={18} className="alert-icon" />
+          <div className="signin-alert signin-alert-error" role="alert">
+            <AlertCircle size={16} className="alert-icon" />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Password Login Form */}
-        <form onSubmit={handlePasswordSubmit} className="login-form" noValidate>
-          {/* Email */}
-          <div className="login-form-group">
-            <label className="login-label" htmlFor="login-email">
-              Email Address <span className="required-star">*</span>
-            </label>
-            <div className="login-input-wrapper">
-              <Mail size={17} className="login-field-icon" />
-              <input
-                id="login-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={handlePasswordChange}
-                className={`login-input ${fieldErrors.email ? 'input-error' : ''}`}
-                disabled={loading}
-              />
-            </div>
-            {fieldErrors.email && (
-              <span className="login-field-error">{fieldErrors.email}</span>
-            )}
-          </div>
-
-          {/* Password */}
-          <div className="login-form-group">
-            <div className="login-password-header">
-              <label className="login-label" htmlFor="login-password">
-                Password <span className="required-star">*</span>
+        {/* ----------------------------------------------------------------- */}
+        {/* PASSWORD SIGN-IN MODE (Primary)                                   */}
+        {/* ----------------------------------------------------------------- */}
+        {loginMode === 'PASSWORD' && (
+          <form onSubmit={handlePasswordSubmit} className="signin-form" noValidate>
+            {/* Email Field */}
+            <div className="signin-field-group">
+              <label className="signin-label" htmlFor="signin-email">
+                Email
               </label>
+              <div className="signin-input-wrap">
+                <Mail size={16} className="signin-input-icon" />
+                <input
+                  id="signin-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="name@example.com"
+                  value={formData.email}
+                  onChange={handlePasswordChange}
+                  className={`signin-input ${fieldErrors.email ? 'has-error' : ''}`}
+                  disabled={loading}
+                  autoFocus
+                />
+              </div>
+              {fieldErrors.email && (
+                <span className="signin-field-error">{fieldErrors.email}</span>
+              )}
             </div>
-            <div className="login-input-wrapper">
-              <Lock size={17} className="login-field-icon" />
-              <input
-                id="login-password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="current-password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handlePasswordChange}
-                className={`login-input ${fieldErrors.password ? 'input-error' : ''}`}
-                disabled={loading}
-              />
-              <button
-                type="button"
-                className="password-toggle-btn"
-                onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                tabIndex={-1}
-              >
-                {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
-              </button>
+
+            {/* Password Field */}
+            <div className="signin-field-group">
+              <label className="signin-label" htmlFor="signin-password">
+                Password
+              </label>
+              <div className="signin-input-wrap">
+                <Lock size={16} className="signin-input-icon" />
+                <input
+                  id="signin-password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handlePasswordChange}
+                  className={`signin-input ${fieldErrors.password ? 'has-error' : ''}`}
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  className="signin-eye-toggle"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              {fieldErrors.password && (
+                <span className="signin-field-error">{fieldErrors.password}</span>
+              )}
             </div>
-            {fieldErrors.password && (
-              <span className="login-field-error">{fieldErrors.password}</span>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="signin-submit-btn"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="signin-spinner" />
+                  <span>Signing In...</span>
+                </>
+              ) : (
+                <span>Sign In</span>
+              )}
+            </button>
+          </form>
+        )}
+
+        {/* ----------------------------------------------------------------- */}
+        {/* OTP SIGN-IN MODE (Alternative)                                    */}
+        {/* ----------------------------------------------------------------- */}
+        {loginMode === 'OTP' && (
+          <div className="signin-otp-flow">
+            {otpStep === 1 ? (
+              <form onSubmit={handleSendOtp} className="signin-form" noValidate>
+                <div className="signin-field-group">
+                  <label className="signin-label" htmlFor="otp-identifier">
+                    Email or Mobile Number
+                  </label>
+                  <div className="signin-input-wrap">
+                    {otpIdentifier.includes('@') ? (
+                      <Mail size={16} className="signin-input-icon" />
+                    ) : (
+                      <Smartphone size={16} className="signin-input-icon" />
+                    )}
+                    <input
+                      id="otp-identifier"
+                      name="otpIdentifier"
+                      type="text"
+                      autoComplete="username"
+                      placeholder="name@example.com or 10-digit number"
+                      value={otpIdentifier}
+                      onChange={(e) => {
+                        setOtpIdentifier(e.target.value)
+                        if (error) setError(null)
+                      }}
+                      className="signin-input"
+                      disabled={loading}
+                      autoFocus
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="signin-submit-btn"
+                  disabled={loading || !otpIdentifier.trim()}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="signin-spinner" />
+                      <span>Sending Code...</span>
+                    </>
+                  ) : (
+                    <span>Send Verification Code</span>
+                  )}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleVerifyOtpSubmit} className="signin-form" noValidate>
+                <div className="signin-otp-header">
+                  <div className="signin-otp-recipient">
+                    <span className="recipient-label">Code sent to:</span>
+                    <strong className="recipient-val">
+                      {otpDetails?.maskedIdentifier || otpIdentifier}
+                    </strong>
+                  </div>
+                  <button
+                    type="button"
+                    className="signin-change-btn"
+                    onClick={() => {
+                      setOtpStep(1)
+                      setError(null)
+                    }}
+                  >
+                    <ArrowLeft size={12} />
+                    <span>Change</span>
+                  </button>
+                </div>
+
+                <div className="signin-field-group">
+                  <label className="signin-label">6-Digit Code</label>
+                  <div className="signin-digits-row">
+                    {otpCode.map((digit, idx) => (
+                      <input
+                        key={idx}
+                        ref={(el) => (otpInputRefs.current[idx] = el)}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleOtpBoxChange(idx, e.target.value)}
+                        onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                        className={`signin-digit-box ${digit ? 'filled' : ''}`}
+                        disabled={loading}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="signin-resend-row">
+                  {otpCountdown > 0 ? (
+                    <span className="signin-cooldown-text">
+                      Resend in {otpCountdown}s
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      className="signin-resend-btn"
+                      onClick={handleResendOtp}
+                      disabled={resendingOtp}
+                    >
+                      <RefreshCw size={13} className={resendingOtp ? 'signin-spinner' : ''} />
+                      <span>{resendingOtp ? 'Resending...' : 'Resend Code'}</span>
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="signin-submit-btn"
+                  disabled={loading || otpCode.join('').length !== 6}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="signin-spinner" />
+                      <span>Verifying...</span>
+                    </>
+                  ) : (
+                    <span>Verify & Sign In</span>
+                  )}
+                </button>
+              </form>
             )}
           </div>
+        )}
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            fullWidth
-            disabled={loading}
-            icon={ArrowRight}
-            iconPosition="right"
-          >
-            {loading ? 'Authenticating...' : 'Sign In'}
-          </Button>
-        </form>
-
-        {/* Divider */}
-        <div className="login-divider">
-          <span>Or continue with</span>
-        </div>
-
-        {/* Google Sign-In Button */}
-        <button
-          type="button"
-          className="google-signin-btn"
-          onClick={() => setShowGoogleModal(true)}
-          disabled={loading}
-        >
-          <svg className="google-icon-svg" viewBox="0 0 24 24" width="20" height="20">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-            />
-          </svg>
-          <span>Continue with Google</span>
-        </button>
-
-        {/* Footer Links */}
-        <div className="login-footer">
-          <p className="login-footer-text">
-            Don't have an account yet?{' '}
-            <Link to="/register" className="login-link">
-              Create an account
+        {/* Compact Footer Link */}
+        <div className="signin-footer">
+          <p className="signin-footer-text">
+            Don't have an account?{' '}
+            <Link to="/register" className="signin-footer-link">
+              Create account
             </Link>
           </p>
         </div>
       </div>
-
-      {/* Google Sign-In Status Modal */}
-      {showGoogleModal && (
-        <div className="google-modal-backdrop" onClick={() => setShowGoogleModal(false)}>
-          <div className="google-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="google-modal-header">
-              <svg className="google-icon-svg" viewBox="0 0 24 24" width="24" height="24">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                />
-              </svg>
-              <div>
-                <h3 className="google-modal-title">Google Sign-In Status</h3>
-                <p className="google-modal-subtitle">Single Sign-On Authentication</p>
-              </div>
-            </div>
-
-            <div style={{ padding: '0.25rem 0', color: '#cbd5e1', fontSize: '0.875rem', lineHeight: '1.55' }}>
-              <p style={{ margin: '0 0 0.5rem 0', fontWeight: 600, color: '#f1f5f9' }}>
-                Google Sign-In is temporarily unavailable.
-              </p>
-              <p style={{ margin: 0, color: '#94a3b8' }}>
-                Secure Google OAuth2 authentication is currently undergoing server-side integration.
-                Please sign in using your registered email and password.
-              </p>
-            </div>
-
-            <div className="google-modal-actions">
-              <Button
-                variant="primary"
-                fullWidth
-                onClick={() => setShowGoogleModal(false)}
-              >
-                Sign In with Email & Password
-              </Button>
-              <Button
-                variant="outline"
-                fullWidth
-                onClick={() => setShowGoogleModal(false)}
-              >
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

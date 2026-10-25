@@ -24,6 +24,8 @@ public class RegisterRequest {
     @Email(message = "Please enter a valid email")
     private String email;
 
+    private String phoneNumber;
+
     @NotBlank(message = "Password is required")
     @Size(
             min = 8,
@@ -69,6 +71,15 @@ public class RegisterRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
 

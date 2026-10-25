@@ -12,6 +12,8 @@ import com.ecommerce.repository.UserRepository;
 import com.ecommerce.security.CustomerUserDetailService;
 import com.ecommerce.security.JwtService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +23,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final CustomerUserDetailService customUserDetailsService;
+    private final EmailSenderService emailSenderService;
 
 
     public AuthServiceImpl(
@@ -33,7 +38,8 @@ public class AuthServiceImpl implements AuthService {
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
             JwtService jwtService,
-            CustomerUserDetailService customUserDetailsService
+            CustomerUserDetailService customUserDetailsService,
+            EmailSenderService emailSenderService
     ) {
 
         this.userRepository = userRepository;
@@ -41,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.customUserDetailsService = customUserDetailsService;
+        this.emailSenderService = emailSenderService;
     }
 
 
@@ -81,6 +88,22 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
+        /*
+         * Handle optional phone number
+         */
+        String cleanPhone = null;
+        if (request.getPhoneNumber() != null && !request.getPhoneNumber().trim().isEmpty()) {
+            cleanPhone = request.getPhoneNumber().replaceAll("[^0-9]", "");
+            if (cleanPhone.length() == 12 && cleanPhone.startsWith("91")) {
+                cleanPhone = cleanPhone.substring(2);
+            }
+            if (userRepository.existsByPhoneNumber(cleanPhone)) {
+                throw new ResourceAlreadyExistsException(
+                        "Mobile phone number is already registered"
+                );
+            }
+        }
+
 
         /*
          * Create new CUSTOMER.
@@ -98,6 +121,10 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(username);
 
         user.setEmail(email);
+
+        if (cleanPhone != null) {
+            user.setPhoneNumber(cleanPhone);
+        }
 
 
         /*
@@ -133,6 +160,12 @@ public class AuthServiceImpl implements AuthService {
         User savedUser =
                 userRepository.save(user);
 
+        // Dispatch Real-time Welcome Email
+        try {
+            emailSenderService.sendWelcomeEmail(savedUser.getEmail(), savedUser.getUsername(), savedUser.getRole().name());
+        } catch (Exception e) {
+            logger.warn("Failed to dispatch welcome email: {}", e.getMessage());
+        }
 
         return new RegisterResponse(
                 savedUser.getId(),

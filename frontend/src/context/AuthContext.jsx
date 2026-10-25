@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { AuthContext } from './authContextInstance'
-import { loginCustomer } from '../api/authApi'
+import { loginCustomer, verifyOtpLogin } from '../api/authApi'
 import { getCurrentUserProfile } from '../api/userApi'
 import { getAdminProfile } from '../api/adminApi'
 
@@ -104,15 +104,13 @@ export const AuthProvider = ({ children }) => {
     restoreSession()
   }, [])
 
-  // Login handler
-  const login = useCallback(async (email, password) => {
-    const authData = await loginCustomer({ email, password })
-
+  // Helper to persist and enrich user profile after login
+  const handleAuthSuccess = async (authData) => {
     const accessToken = authData.accessToken
     const backendRole = authData.role
 
     if (!backendRole) {
-      throw new Error('Login works, but the frontend cannot reliably determine the authenticated user\'s role.')
+      throw new Error("Login succeeded, but the user's role is undetermined.")
     }
 
     const userData = {
@@ -154,10 +152,22 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(fullUser))
       }
     } catch {
-      // Basic login data is already saved, non-blocking
+      // Non-blocking
     }
 
     return authData
+  }
+
+  // Password Login handler
+  const login = useCallback(async (email, password) => {
+    const authData = await loginCustomer({ email, password })
+    return await handleAuthSuccess(authData)
+  }, [])
+
+  // OTP Login handler
+  const loginWithOtp = useCallback(async (identifier, otpCode) => {
+    const authData = await verifyOtpLogin({ identifier, otpCode })
+    return await handleAuthSuccess(authData)
   }, [])
 
   // Logout handler
@@ -223,6 +233,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: Boolean(token),
     loading,
     login,
+    loginWithOtp,
     logout,
     loginWithGoogle,
     refreshProfile,
@@ -234,4 +245,3 @@ export const AuthProvider = ({ children }) => {
 }
 
 export default AuthProvider
-

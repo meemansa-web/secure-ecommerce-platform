@@ -20,6 +20,8 @@ import com.ecommerce.repository.InventoryRepository;
 import com.ecommerce.repository.OrderRepository;
 import com.ecommerce.repository.ProductRepository;
 import com.ecommerce.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,21 +36,26 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final InventoryRepository inventoryRepository;
     private final UserRepository userRepository;
+    private final EmailSenderService emailSenderService;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
             ProductRepository productRepository,
             InventoryRepository inventoryRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            EmailSenderService emailSenderService
     ) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.inventoryRepository = inventoryRepository;
         this.userRepository = userRepository;
+        this.emailSenderService = emailSenderService;
     }
 
     @Override
@@ -111,6 +118,14 @@ public class OrderServiceImpl implements OrderService {
         order.setPayment(payment);
 
         Order savedOrder = orderRepository.save(order);
+
+        // Send Real-time Order Confirmation & Tracking Email
+        try {
+            emailSenderService.sendOrderConfirmationEmail(savedOrder);
+        } catch (Exception e) {
+            logger.warn("Failed to dispatch order confirmation email: {}", e.getMessage());
+        }
+
         return mapToOrderResponse(savedOrder);
     }
 
