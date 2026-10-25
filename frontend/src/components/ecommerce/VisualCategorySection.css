@@ -1,0 +1,401 @@
+/* ========================================================================= */
+/* VISUAL CATEGORY SECTION (MEESHO / MYNTRA EDITORIAL HYBRID)               */
+/* ========================================================================= */
+
+.visual-category-section {
+  padding: 3rem 0 2.5rem;
+  background-color: var(--color-bg-primary, #f8fafc);
+  border-bottom: 1px solid var(--color-border, rgba(0, 0, 0, 0.06));
+  position: relative;
+  transition: background-color var(--transition-base, 0.25s);
+}
+
+.visual-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.visual-header-text {
+  max-width: 600px;
+}
+
+.visual-section-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #0f172a);
+  margin: 0.35rem 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.visual-section-sub {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #64748b);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 3 Distinct Dimension Switcher Buttons ("alag alag hona chahiye") */
+.dimension-switcher-tabs {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-surface, #ffffff);
+  padding: 4px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.dimension-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary, #64748b);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.dimension-tab-btn:hover {
+  color: var(--color-text-primary, #0f172a);
+}
+
+.dimension-tab-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode override */
+[data-theme='dark'] .dimension-tab-btn.active,
+.theme-dark .dimension-tab-btn.active {
+  background: #d4af37;
+  color: #0b0f19;
+}
+
+/* ========================================================================= */
+/* DIMENSION 1: CATEGORY BASED (Meesho Arched Cards Row)                     */
+/* ========================================================================= */
+
+.visual-circle-row-wrap {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
+}
+
+.visual-circle-row-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.visual-circle-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.75rem;
+  min-width: max-content;
+  padding: 0.5rem 0.25rem;
+}
+
+.meesho-arch-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  width: 120px;
+  transition: transform 0.25s ease;
+  outline: none;
+}
+
+.meesho-arch-card:hover {
+  transform: translateY(-5px);
+}
+
+/* The distinctive Meesho arch shape frame */
+.arch-media-frame {
+  position: relative;
+  width: 110px;
+  height: 125px;
+  border-radius: 55px 55px 16px 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.04) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 6px 14px -3px rgba(0, 0, 0, 0.07);
+  margin-bottom: 0.75rem;
+  transition: all 0.25s ease;
+}
+
+.meesho-arch-card:hover .arch-media-frame {
+  border-color: #d4af37;
+  box-shadow: 0 10px 22px -4px rgba(212, 175, 55, 0.3);
+  transform: scale(1.03);
+}
+
+.arch-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.meesho-arch-card:hover .arch-img {
+  transform: scale(1.1);
+}
+
+.arch-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f172a);
+  margin-bottom: 0.15rem;
+  line-height: 1.25;
+}
+
+.arch-subtext {
+  font-size: 0.6875rem;
+  color: var(--color-text-secondary, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 115px;
+}
+
+/* ========================================================================= */
+/* DIMENSION 2: GENDER BASED (Men, Women, Kids, Unisex)                     */
+/* ========================================================================= */
+
+.gender-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.gender-feature-card {
+  position: relative;
+  height: 320px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gender-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.22);
+}
+
+.gender-card-bg-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+.gender-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gender-feature-card:hover .gender-bg-img {
+  transform: scale(1.08);
+}
+
+.gender-scrim-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.85) 100%);
+}
+
+.gender-content-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  color: #ffffff;
+}
+
+.gender-collection-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #d4af37;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.gender-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.01em;
+}
+
+.gender-tagline {
+  font-size: 0.78125rem;
+  color: #cbd5e1;
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+.gender-cta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0b0f19;
+  background: #ffffff;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.gender-feature-card:hover .gender-cta-pill {
+  background: #d4af37;
+}
+
+/* ========================================================================= */
+/* DIMENSION 3: BRAND BASED (Myntra Style Brand Cards)                      */
+/* ========================================================================= */
+
+.brands-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.brand-feature-card {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, rgba(0, 0, 0, 0.08));
+  border-radius: 12px;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brand-feature-card:hover {
+  border-color: #d4af37;
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px -6px rgba(212, 175, 55, 0.2);
+}
+
+.brand-card-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.brand-tier-badge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.12);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.brand-trending-icon {
+  color: #d4af37;
+}
+
+.brand-card-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #d4af37;
+  margin-bottom: 0.85rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.brand-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.brand-feature-card:hover .brand-avatar-img {
+  transform: scale(1.12);
+}
+
+.brand-title-text {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #0f172a);
+  margin: 0 0 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+.brand-origin-text {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #d4af37;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.brand-tagline-text {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #64748b);
+  margin-bottom: 1rem;
+  line-height: 1.35;
+}
+
+.brand-view-link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .gender-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .brands-feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .gender-cards-grid,
+  .brands-feature-grid {
+    grid-template-columns: 1fr;
+  }
+  .visual-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .dimension-switcher-tabs {
+    width: 100%;
+    justify-content: space-around;
+  }
+}

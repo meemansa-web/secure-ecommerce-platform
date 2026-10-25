@@ -1,0 +1,69 @@
+/* AdminCategoriesPage.css */
+.admin-categories-root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.admin-form-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.admin-form-input {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.admin-form-input:focus {
+  border-color: var(--border-medium);
+  background-color: var(--bg-card);
+}
+
+.admin-form-textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--transition-fast);
+}
+
+.admin-form-textarea:focus {
+  border-color: var(--border-medium);
+  background-color: var(--bg-card);
+}
+
+.admin-form-input.input-error,
+.admin-form-textarea.input-error {
+  border-color: #df5848;
+}
+
+.admin-form-error {
+  display: block;
+  font-size: 0.75rem;
+  color: #df5848;
+  margin-top: 0.25rem;
+}
+
+.admin-char-count {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 0.2rem;
+}

@@ -1,0 +1,400 @@
+/* ==============================================================================
+   MODIMAL COLORFUL EDITORIAL PRODUCT CARD
+   Vibrant container, dynamic category glowing borders & hover micro-interactions
+   ============================================================================== */
+
+.editorial-product-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 18px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 18px -2px rgba(99, 102, 241, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.3s ease,
+              background 0.3s ease;
+  overflow: hidden;
+}
+
+/* Ambient Top Accent Shimmer Line inside card */
+.card-ambient-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 4;
+}
+
+/* Category-Specific Colorful Glow & Container Hover States */
+.product-theme-tech .card-ambient-glow {
+  background: linear-gradient(90deg, #06b6d4, #3b82f6, #6366f1);
+}
+.product-theme-tech:hover {
+  border-color: rgba(6, 182, 212, 0.55);
+  box-shadow: 0 20px 38px -10px rgba(6, 182, 212, 0.28), 0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+.product-theme-fashion .card-ambient-glow {
+  background: linear-gradient(90deg, #ec4899, #f43f5e, #a855f7);
+}
+.product-theme-fashion:hover {
+  border-color: rgba(236, 72, 153, 0.55);
+  box-shadow: 0 20px 38px -10px rgba(236, 72, 153, 0.28), 0 0 20px rgba(244, 63, 94, 0.15);
+}
+
+.product-theme-home .card-ambient-glow {
+  background: linear-gradient(90deg, #10b981, #059669, #14b8a6);
+}
+.product-theme-home:hover {
+  border-color: rgba(16, 185, 129, 0.55);
+  box-shadow: 0 20px 38px -10px rgba(16, 185, 129, 0.28), 0 0 20px rgba(20, 184, 166, 0.15);
+}
+
+.product-theme-access .card-ambient-glow {
+  background: linear-gradient(90deg, #f59e0b, #f97316, #e11d48);
+}
+.product-theme-access:hover {
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 20px 38px -10px rgba(245, 158, 11, 0.28), 0 0 20px rgba(249, 115, 22, 0.15);
+}
+
+.product-theme-default .card-ambient-glow {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+}
+.product-theme-default:hover {
+  border-color: rgba(99, 102, 241, 0.55);
+  box-shadow: 0 20px 38px -10px rgba(99, 102, 241, 0.25), 0 0 20px rgba(139, 92, 246, 0.15);
+}
+
+.editorial-product-card:hover {
+  transform: translateY(-8px);
+}
+
+.editorial-product-card:hover .card-ambient-glow {
+  opacity: 1;
+}
+
+.card-link-wrapper {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Image Container - Aspect ratio 3:4 portrait */
+.card-media-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background-color: var(--bg-secondary);
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+.card-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.editorial-product-card:hover .card-media-img {
+  transform: scale(1.065);
+}
+
+/* Wishlist Button */
+.card-wishlist-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  z-index: 3;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+[data-theme="dark"] .card-wishlist-btn {
+  background-color: rgba(20, 24, 33, 0.82);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.card-wishlist-btn:hover {
+  transform: scale(1.15);
+  color: #e11d48;
+}
+
+.card-wishlist-btn.wishlist-active {
+  color: #e11d48;
+  border-color: rgba(225, 29, 72, 0.4);
+  background-color: rgba(225, 29, 72, 0.15);
+}
+
+/* Quick Add Button with Colorful Gradient */
+.card-quick-add-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.22s ease,
+              filter 0.2s ease;
+  cursor: pointer;
+  border: none;
+  z-index: 3;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-quick-add-btn:hover {
+  filter: brightness(1.12);
+}
+
+.editorial-product-card:hover .card-quick-add-btn {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Customer Action Feedback Toast */
+.card-toast-feedback {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.55rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(165, 180, 252, 0.3);
+  text-align: center;
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: fadeInToast 0.2s ease-out;
+}
+
+@keyframes fadeInToast {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Content Information Below Visual */
+.card-editorial-info {
+  padding-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.card-category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.card-brand-badge {
+  font-size: 0.65625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.18rem 0.55rem;
+  border-radius: 4px;
+  background-color: rgba(212, 175, 55, 0.12);
+  color: #b8860b;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+}
+
+[data-theme='dark'] .card-brand-badge {
+  color: #d4af37;
+  border-color: rgba(212, 175, 55, 0.35);
+  background-color: rgba(212, 175, 55, 0.15);
+}
+
+.card-category-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  transition: all 0.25s ease;
+}
+
+.product-theme-tech:hover .card-category-label {
+  background-color: rgba(6, 182, 212, 0.14);
+  color: #0284c7;
+}
+
+.product-theme-fashion:hover .card-category-label {
+  background-color: rgba(236, 72, 153, 0.14);
+  color: #db2777;
+}
+
+.product-theme-home:hover .card-category-label {
+  background-color: rgba(16, 185, 129, 0.14);
+  color: #059669;
+}
+
+.product-theme-access:hover .card-category-label {
+  background-color: rgba(245, 158, 11, 0.14);
+  color: #d97706;
+}
+
+.card-stock-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.card-stock-label.stock-in {
+  color: #10b981;
+}
+
+.card-stock-label.stock-low {
+  color: #f59e0b;
+}
+
+.card-stock-label.stock-out {
+  color: #ef4444;
+}
+
+.card-product-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.35;
+  margin: 0.15rem 0 0.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+}
+
+.editorial-product-card:hover .card-product-title {
+  color: var(--text-primary);
+}
+
+.card-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+}
+
+.card-current-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.card-view-details {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.card-arrow-icon {
+  transition: transform 0.2s ease;
+}
+
+.editorial-product-card:hover .card-view-details {
+  color: #6366f1;
+}
+
+.editorial-product-card:hover .card-arrow-icon {
+  transform: translateX(4px);
+}
+
+/* ========================================================
+   Real Product Rating Badge (Meesho / Myntra Style)
+   ======================================================== */
+.card-rating-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #f8fafc;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.editorial-product-card:hover .card-rating-badge {
+  transform: translateY(-44px);
+}
+
+.card-rating-badge .card-rating-num {
+  color: #f59e0b;
+  font-weight: 800;
+}
+
+.card-rating-badge .card-rating-sep {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.65rem;
+}
+
+.card-rating-badge .card-rating-cnt {
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
