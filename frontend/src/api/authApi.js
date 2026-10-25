@@ -7,11 +7,19 @@ import axiosInstance from './axiosInstance'
  * @param {string} customerData.lastName
  * @param {string} customerData.username
  * @param {string} customerData.email
+ * @param {string} [customerData.phoneNumber]
  * @param {string} customerData.password
  * @returns {Promise<Object>} RegisterResponse
  */
 export const registerCustomer = async (customerData) => {
-  const response = await axiosInstance.post('/api/auth/register', customerData)
+  const payload = {
+    ...customerData,
+    email: (customerData.email || '').trim().toLowerCase(),
+    username: (customerData.username || '').trim(),
+    firstName: (customerData.firstName || '').trim(),
+    lastName: (customerData.lastName || '').trim(),
+  }
+  const response = await axiosInstance.post('/api/auth/register', payload)
   return response.data
 }
 
@@ -30,21 +38,62 @@ export const registerCustomer = async (customerData) => {
  * @returns {Promise<Object>} VendorRegistrationResponse
  */
 export const registerVendor = async (vendorData) => {
-  const response = await axiosInstance.post('/api/vendors/register', vendorData)
+  const payload = {
+    ...vendorData,
+    email: (vendorData.email || '').trim().toLowerCase(),
+    businessEmail: (vendorData.businessEmail || '').trim().toLowerCase(),
+  }
+  const response = await axiosInstance.post('/api/vendors/register', payload)
   return response.data
 }
 
 /**
- * Log in a customer or user
+ * Log in a customer or user using email and password
  * @param {Object} credentials
  * @param {string} credentials.email
  * @param {string} credentials.password
  * @returns {Promise<{accessToken: string, tokenType: string, userId: number, name: string, email: string, role: string}>}
  */
-export const loginCustomer = async (credentials) => {
-  const response = await axiosInstance.post('/api/auth/login', credentials)
+export const loginCustomer = async ({ email, password }) => {
+  const normalizedEmail = (email || '').trim().toLowerCase()
+  const response = await axiosInstance.post('/api/auth/login', {
+    email: normalizedEmail,
+    password,
+  })
   return response.data
 }
 
+/**
+ * Send an OTP verification code to Email or Mobile Phone
+ * @param {Object} payload
+ * @param {string} payload.identifier - Email address or 10-digit mobile number
+ * @param {string} [payload.purpose] - Defaults to 'LOGIN'
+ * @returns {Promise<{success: boolean, message: string, maskedIdentifier: string, channel: string, expiresInSeconds: number}>}
+ */
+export const sendLoginOtp = async ({ identifier, purpose = 'LOGIN' }) => {
+  const clean = (identifier || '').trim()
+  const normalized = clean.includes('@') ? clean.toLowerCase() : clean
+  const response = await axiosInstance.post('/api/auth/otp/send', {
+    identifier: normalized,
+    purpose,
+  })
+  return response.data
+}
 
-
+/**
+ * Verify OTP code and authenticate the user
+ * @param {Object} payload
+ * @param {string} payload.identifier - Email address or 10-digit mobile number
+ * @param {string} payload.otpCode - 6-digit OTP code
+ * @returns {Promise<{accessToken: string, tokenType: string, userId: number, name: string, email: string, role: string}>}
+ */
+export const verifyOtpLogin = async ({ identifier, otpCode }) => {
+  const clean = (identifier || '').trim()
+  const normalized = clean.includes('@') ? clean.toLowerCase() : clean
+  const cleanOtp = (otpCode || '').trim()
+  const response = await axiosInstance.post('/api/auth/otp/verify-login', {
+    identifier: normalized,
+    otpCode: cleanOtp,
+  })
+  return response.data
+}

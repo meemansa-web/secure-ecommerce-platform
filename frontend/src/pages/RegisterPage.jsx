@@ -106,6 +106,13 @@ export default function RegisterPage() {
       newErrors.email = 'Please enter a valid email'
     }
 
+    if (formData.phoneNumber && formData.phoneNumber.trim()) {
+      const cleanPhone = formData.phoneNumber.replace(/\D/g, '')
+      if (cleanPhone.length < 10) {
+        newErrors.phoneNumber = 'Please enter a valid 10-digit mobile number'
+      }
+    }
+
     if (!formData.password) {
       newErrors.password = 'Password is required'
     } else if (formData.password.length < 8) {
@@ -417,7 +424,25 @@ export default function RegisterPage() {
               {apiError && (
                 <div className="register-error-banner">
                   <AlertCircle size={18} className="error-banner-icon" />
-                  <span>{apiError}</span>
+                  <div style={{ flex: 1 }}>
+                    <div>{apiError}</div>
+                    {(apiError.toLowerCase().includes('already') || apiError.toLowerCase().includes('registered')) && (
+                      <div style={{ marginTop: '0.4rem' }}>
+                        <Link
+                          to="/login"
+                          state={{ registeredEmail: formData.email }}
+                          style={{
+                            color: '#6366f1',
+                            fontWeight: 600,
+                            textDecoration: 'underline',
+                            fontSize: '0.85rem',
+                          }}
+                        >
+                          Sign in to your account here →
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -503,6 +528,27 @@ export default function RegisterPage() {
                 />
                 {errors.email && (
                   <span className="field-error-text">{errors.email}</span>
+                )}
+              </div>
+
+              {/* Mobile Phone Number */}
+              <div className="form-field-group">
+                <label htmlFor="phoneNumber" className="form-field-label">
+                  Mobile Number <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 400 }}>(Optional for SMS/OTP login)</span>
+                </label>
+                <input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="tel"
+                  className={`form-field-input ${errors.phoneNumber ? 'field-error' : ''}`}
+                  placeholder="e.g. 9876543210 (10-digit number)"
+                  value={formData.phoneNumber || ''}
+                  onChange={handleChange}
+                  disabled={loading}
+                  autoComplete="tel"
+                />
+                {errors.phoneNumber && (
+                  <span className="field-error-text">{errors.phoneNumber}</span>
                 )}
               </div>
 

@@ -3,6 +3,7 @@
  * Dispatches authentic HTML emails for:
  * 1. User Registration & Welcome
  * 2. Order Confirmation & Itemized Tax Invoice
+ * 3. One-Time Password (OTP) Login & Verification
  *
  * Saves dispatched emails to customer's in-app inbox (localStorage)
  * and fires custom events for real-time toast and preview modals.
@@ -266,6 +267,86 @@ export const sendOrderConfirmationEmail = async ({
   }
 
   saveEmailToStorage(email, emailObject)
+  notifyEmailDispatched(emailObject)
+
+  return emailObject
+}
+
+/**
+ * Send / Preview OTP Dispatch Notification (Email or SMS)
+ */
+export const sendOtpDispatchNotification = async ({
+  identifier,
+  otpCode,
+  channel = 'EMAIL',
+  maskedIdentifier = '',
+}) => {
+  if (!identifier || !otpCode) return null
+
+  const now = new Date()
+  const formattedDate = now.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
+  const emailId = `mail-otp-${Date.now()}`
+  const isEmail = channel === 'EMAIL'
+  const subject = isEmail
+    ? `Your Nivora Sign-In Verification Code: ${otpCode}`
+    : `SMS OTP Alert for ${maskedIdentifier || identifier}`
+
+  const htmlBody = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; background: #0f172a; color: #f8fafc; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+      <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 26px 20px; border-bottom: 2px solid #d4af37; text-align: center;">
+        <h1 style="margin: 0; font-size: 24px; color: #d4af37; letter-spacing: 2px; text-transform: uppercase;">NIVORA</h1>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8; letter-spacing: 1px;">AUTHENTICATION & SECURITY</p>
+      </div>
+
+      <div style="padding: 30px 24px; text-align: center;">
+        <h2 style="margin: 0 0 12px 0; font-size: 20px; color: #ffffff;">Your One-Time Password (OTP)</h2>
+        <p style="margin: 0 0 24px 0; font-size: 14px; color: #cbd5e1; line-height: 1.5;">
+          Use the secure 6-digit verification code below to complete your sign-in to Nivora.
+        </p>
+
+        <div style="background: rgba(212, 175, 55, 0.1); border: 2px dashed #d4af37; border-radius: 12px; padding: 20px; margin: 0 auto 24px auto; max-width: 320px;">
+          <div style="font-size: 34px; font-weight: 800; letter-spacing: 10px; color: #d4af37; font-family: monospace;">
+            ${otpCode}
+          </div>
+          <p style="margin: 8px 0 0 0; font-size: 12px; color: #94a3b8;">
+            Valid for <strong>5 minutes</strong> only
+          </p>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.04); border-radius: 8px; padding: 14px; text-align: left; font-size: 13px; color: #94a3b8; line-height: 1.5;">
+          <div style="color: #cbd5e1; font-weight: 600; margin-bottom: 4px;">Security Information:</div>
+          <div>• Sent to: <strong style="color: #fff;">${maskedIdentifier || identifier}</strong> via <strong>${channel}</strong></div>
+          <div>• If you did not initiate this request, please disregard this notification.</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(0, 0, 0, 0.4); padding: 16px 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid rgba(255,255,255,0.06);">
+        <p style="margin: 0;">© ${new Date().getFullYear()} Nivora India E-Commerce Platform. All rights reserved.</p>
+      </div>
+    </div>
+  `
+
+  const emailObject = {
+    id: emailId,
+    type: 'OTP_VERIFICATION',
+    to: identifier,
+    from: isEmail ? 'security@nivora.com (Nivora Security)' : 'NIVORA-SMS-GATEWAY',
+    subject,
+    date: formattedDate,
+    timestamp: now.getTime(),
+    htmlBody,
+    previewSnippet: `Your Nivora verification code is ${otpCode}. Valid for 5 minutes.`,
+    otpCode,
+  }
+
+  saveEmailToStorage(identifier, emailObject)
   notifyEmailDispatched(emailObject)
 
   return emailObject

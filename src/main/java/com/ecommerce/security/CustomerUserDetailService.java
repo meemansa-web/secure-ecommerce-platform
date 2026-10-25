@@ -37,6 +37,7 @@ public class CustomerUserDetailService implements UserDetailsService {
                 .password(user.getPassword())
                 .roles(user.getRole().name())
                 .disabled(!user.isEnabled())
+                .accountLocked(user.isAccountLocaked())
                 .build();
     }
 }

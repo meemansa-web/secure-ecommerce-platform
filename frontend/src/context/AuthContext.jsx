@@ -1,55 +1,34 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { AuthContext } from './authContextInstance'
-import { loginCustomer } from '../api/authApi'
+import { loginCustomer, verifyOtpLogin } from '../api/authApi'
 import { getCurrentUserProfile } from '../api/userApi'
 import { getAdminProfile } from '../api/adminApi'
+import { AuthContext } from './authContextInstance'
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => {
-    const stored = localStorage.getItem('token')
-    if (stored && (stored.startsWith('google_jwt_') || stored.startsWith('otp_jwt_'))) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      return null
-    }
-    return stored || null
-  })
+  const [token, setToken] = useState(() => localStorage.getItem('token') || null)
   const [user, setUser] = useState(() => {
     try {
-      const storedToken = localStorage.getItem('token')
-      if (!storedToken || storedToken.startsWith('google_jwt_') || storedToken.startsWith('otp_jwt_')) {
-        return null
-      }
-      const savedUser = localStorage.getItem('user')
-      return savedUser ? JSON.parse(savedUser) : null
+      const saved = localStorage.getItem('user')
+      return saved ? JSON.parse(saved) : null
     } catch {
       return null
     }
   })
   const [role, setRole] = useState(() => {
     try {
-      const storedToken = localStorage.getItem('token')
-      if (!storedToken || storedToken.startsWith('google_jwt_') || storedToken.startsWith('otp_jwt_')) {
-        return null
-      }
-      const savedUser = localStorage.getItem('user')
-      return savedUser ? JSON.parse(savedUser).role : null
+      const saved = localStorage.getItem('user')
+      return saved ? JSON.parse(saved).role : null
     } catch {
       return null
     }
   })
   const [loading, setLoading] = useState(true)
 
-  // Restore & revalidate session on mount
+  // Verify and restore session on application mount
   useEffect(() => {
     const restoreSession = async () => {
-      const storedToken = localStorage.getItem('token')
-      if (!storedToken || storedToken.startsWith('google_jwt_') || storedToken.startsWith('otp_jwt_')) {
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        setToken(null)
-        setUser(null)
-        setRole(null)
+      const savedToken = localStorage.getItem('token')
+      if (!savedToken) {
         setLoading(false)
         return
       }
@@ -104,15 +83,13 @@ export const AuthProvider = ({ children }) => {
     restoreSession()
   }, [])
 
-  // Login handler
-  const login = useCallback(async (email, password) => {
-    const authData = await loginCustomer({ email, password })
-
+  // Helper to persist and enrich user profile after login
+  const handleAuthSuccess = async (authData) => {
     const accessToken = authData.accessToken
     const backendRole = authData.role
 
     if (!backendRole) {
-      throw new Error('Login works, but the frontend cannot reliably determine the authenticated user\'s role.')
+      throw new Error("Login succeeded, but the user's role is undetermined.")
     }
 
     const userData = {
@@ -154,10 +131,22 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(fullUser))
       }
     } catch {
-      // Basic login data is already saved, non-blocking
+      // Non-blocking
     }
 
     return authData
+  }
+
+  // Password Login handler
+  const login = useCallback(async (email, password) => {
+    const authData = await loginCustomer({ email, password })
+    return await handleAuthSuccess(authData)
+  }, [])
+
+  // OTP Login handler
+  const loginWithOtp = useCallback(async (identifier, otpCode) => {
+    const authData = await verifyOtpLogin({ identifier, otpCode })
+    return await handleAuthSuccess(authData)
   }, [])
 
   // Logout handler
@@ -223,6 +212,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: Boolean(token),
     loading,
     login,
+    loginWithOtp,
     logout,
     loginWithGoogle,
     refreshProfile,
@@ -234,4 +224,3 @@ export const AuthProvider = ({ children }) => {
 }
 
 export default AuthProvider
-
