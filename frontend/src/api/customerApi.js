@@ -13,3 +13,6 @@ export const getCustomerProfile = async () => {
   const response = await axiosInstance.get('/api/user/me')
   return response.data
 }
+
+export const getCurrentUserProfile = getCustomerProfile
+

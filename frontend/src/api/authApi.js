@@ -26,6 +26,15 @@ export const registerCustomer = async (customerData) => {
 /**
  * Register a new vendor (requires business info, pending admin approval)
  * @param {Object} vendorData
+ * @param {string} vendorData.firstName
+ * @param {string} vendorData.lastName
+ * @param {string} vendorData.username
+ * @param {string} vendorData.email
+ * @param {string} vendorData.password
+ * @param {string} vendorData.businessName
+ * @param {string} vendorData.businessEmail
+ * @param {string} vendorData.businessPhone
+ * @param {string} vendorData.businessAddress
  * @returns {Promise<Object>} VendorRegistrationResponse
  */
 export const registerVendor = async (vendorData) => {
