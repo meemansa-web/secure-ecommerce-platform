@@ -16,7 +16,7 @@ public class RealEmailSendTest {
 
     @Test
     @Disabled("Verified live SMTP delivery: uncomment only when manual verification is needed")
-    @DisplayName("Test sending real live email to meemansa2405@gmail.com")
+    @DisplayName("Test sending real live email to meemansa2405@gmail.com or sakhla1205@gmail.com")
     void testSendRealEmail() {
         assertDoesNotThrow(() -> {
             emailSenderService.sendOtpEmail("meemansa2405@gmail.com", "789456");
